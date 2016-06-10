@@ -8,6 +8,7 @@ no_can_open = 0
 uname = ""
 process_list = ""
 kernel_version = ""
+history_listing = ['.bash_history','.mysql_history','.bashrc','.zshrc','.zsh_history']
 ################
 
 def prez():
@@ -20,6 +21,37 @@ def prez():
 
 {c} Github.com/Graniet"""
 
+def getShell():
+	if len(os.popen('find /Users -name ".bashrc" -type f -print 2>/dev/null').read().strip()) > 1:
+		return "bash"
+	elif len(os.popen('find /Users -name ".zshrc" -type f -print 2>/dev/null').read().strip()) > 1:
+		return "zsh"
+	else:
+		return "sh?"
+
+
+def checkShellHistory():
+	shell = getShell()
+	if len(os.popen('find /Users -name ".'+shell+'_history" -type f -print 2>/dev/null').read()) > 0:
+		files = os.popen('find /Users -name ".'+shell+'_history" -type f -print 2>/dev/null').read()
+		files = files.split('\n')
+		for line in files:
+			if line != '':
+				for element in open(line, 'r'):
+					if element != '':
+						print "[#] "+element.strip()
+			else:
+				print "{!} Can't read ."+shell+"_history"
+def checkMySQL():
+	if len(os.popen('find /Users -name ".mysql_history" -type f -print 2>/dev/null').read()) > 0:
+		files = os.popen('find /Users -name ".mysql_history" -type f -print 2>/dev/null').read()
+		files = files.split('\n')
+		for line in files:
+			for element in open(line, 'r'):
+				print "[#] "+element
+	else:
+		print "{!} Can't read .mysql_history"
+
 def information():
 	global uname
 	global process_list
@@ -30,8 +62,8 @@ def information():
 	print "========="
 	print "= [!] User > "+os.popen('whoami').read().strip()
 	print "= [!] Group > "+os.popen('id -Gn').read().strip()[:20]  
+	print "= [!] Shell > "+getShell()
 	print "= [!] "+uname.strip()
-	print "= [+] Process list command :process"
 	print "= [+] Command : process,kernel_exploit,forensic" 
 	print "========"
 
@@ -72,31 +104,45 @@ def kernel_exploit():
 	global kernel_version
 	print "[!] kernel version: "+kernel_version
 
-def main():
-	global file_history
-	history = os.popen('find /Users -name ".bash_history" -type f -print 2>/dev/null').read()
-	history = history.split("\n")
-	#history = open('~/.bash_history', 'r')
-	for line in history:
-		if(line != ""):
-			file_history.append(line)
-	information()
-#	analyse()
-	try:
-		while 1:
-			prompt = raw_input('Inspector > ')
-			if 'forensic' in prompt:
-				print "=========="
-				analyse()
-				print "=========="
-			if 'process' in prompt:
-				process_listname()
-			if 'kernel_exploit' in prompt:
-				kernel_exploit()
-			if 'help' in prompt:
-				information()
+def history_help():
+	print "=========="
+	print "[+] MySQL history > history mysql"
+	print "[+] Shell history > history shell"
+	print "=========="
 
-	except:
-		print "bye ^^"
+def main():
+	x = 0
+	while len(history_listing) > x:
+		global file_history
+		for fichier in history_listing:
+			history = os.popen('find /Users -name "'+fichier+'" -type f -print 2>/dev/null').read()
+			history = history.split("\n")
+			#history = open('~/.bash_history', 'r')
+			for line in history:
+				if(line != ""):
+					file_history.append(line)
+			x = x+1
+		information()
+	#	analyse()
+		try:
+			while 1:
+				prompt = raw_input('Inspector > ')
+				if 'forensic' in prompt:
+					analyse()
+				if 'process' in prompt:
+					process_listname()
+				if 'kernel_exploit' in prompt:
+					kernel_exploit()
+				if 'history mysql' in prompt:
+					checkMySQL()
+				if 'history shell' in prompt:
+					checkShellHistory()
+				if 'help' in prompt:
+					information()
+				if prompt == "history":
+					history_help()
+
+		except:
+			print "bye ^^"
 prez()
 main()
