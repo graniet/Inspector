@@ -1,7 +1,5 @@
 #!/usr/env	python
 
-import urllib
-import requests
 import os,sys
 
 # Global #######
