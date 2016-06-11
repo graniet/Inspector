@@ -86,16 +86,16 @@ def information():
 	print "= [!] Group > "+os.popen('id -Gn').read().strip()[:20]  
 	print "= [!] Shell > "+getShell()
 	print "= [!] "+uname.strip()
-	print "= [+] Command : process,kernel_exploit,forensic" 
+	print "= [+] Command : help,search,process,kernel_exploit,forensic" 
 	print "========"
 
 def process_listname():
 	global process_list
 	list_process = process_list.split('\n')
 	for process in list_process:
-		if 'mysql' in process:
+		if 'mysqld' in process:
 			print "# " +process
-			print "#### [!] MySQL run in root? "
+			print "	{!} MySQL run in root? =)"
 		print "# " + process
 
 def analyse():
@@ -110,21 +110,29 @@ def analyse():
 				for line2 in files:
 					if line2 != '':
 						if 'mysql -u' in line2:
-							print "# MySQL login found"
-							print "	(!) MySQL commande line is used for login exemple : mysql -u root -p"
-							print "	>>> " + line2.strip()
+							print "__________________________________________"
+							print "| MySQL login found"
+							print "|_	(!) MySQL commande line is used for login exemple : mysql -u root -p"
+							print "   \	>>> " + line2.strip()
+							print "__________________________________________"
 						if 'ssh' in line2:
 							if '@' in line2:
-								print "# SSH found"
-								print "	(!) SSH used for secure connexion"
-								print "	>>> "+ line2.strip()
+								print "__________________________________________"
+								print "| SSH found"
+								print "|_	(!) SSH used for secure connexion"
+								print "   \	>>> "+ line2.strip()
+								print "__________________________________________"
 						if "sudo" in line2:
-							if 'su' in line2:
-								print "# Root login ?"
-								print "	>>> "+ line2.strip()
+							if 'sudo su' in line2:
+								print "__________________________________________"
+								print "| Root login?"
+								print " \	>>> "+ line2.strip()
+								print "__________________________________________"
 							else:
-								print "# Root using ?"
-								print "	>>> "+line2.strip()
+								print "__________________________________________"
+								print "| Command with root usage?"
+								print " \	>>> "+line2.strip()
+								print "__________________________________________"
 													
 			except:
 				no_can_open = no_can_open + 1
@@ -135,11 +143,36 @@ def kernel_exploit():
 	print "[!] kernel version: "+kernel_version
 	getExploit()
 
+def search_file(prompt):
+	var = 0
+	try:
+		if "=" in prompt:
+			value = prompt.split('=')[1]
+			print "Start search > " + value
+			try:
+				history = os.popen('find '+start_dir+' -name "'+value+'" -type f -print 2>/dev/null').read()
+				space = history.split('\n')
+				for line in space:
+					if line != '':
+						print "{+} "+line.strip()
+						var = var + 1
+				if var == 0:
+					print "{-} No file found :("
+			except:
+				print "Error on search"
+	except:
+		print "Error please leave issue"
+
 def history_help():
 	print "=========="
 	print "[+] MySQL history > history mysql"
 	print "[+] Shell history > history shell"
 	print "=========="
+
+def search_help():
+	print "========"
+	print "[+] search file=name.txt"
+	print "========"
 
 def main():
 	global start_dir
@@ -171,6 +204,10 @@ def main():
 					checkShellHistory()
 				if 'help' in prompt:
 					information()
+				if prompt == "search":
+					search_help()
+				if 'search file=' in prompt:
+					search_file(prompt)
 				if prompt == "history":
 					history_help()
 
