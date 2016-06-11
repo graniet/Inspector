@@ -9,6 +9,12 @@ wget https://raw.githubusercontent.com/graniet/Inspector/master/inspector.py
 ```PHP
 python inspector.py
 ```
+
++ Or download & execute
+```PHP
+curl https://raw.githubusercontent.com/graniet/Inspector/master/inspector.py | python
+```
+
 + Wait information loading
 ![Inspector loading](http://s33.postimg.org/opwyxisn2/Capture_d_e_cran_2016_06_10_a_15_57_26.jpg)
 
