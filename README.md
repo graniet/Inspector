@@ -1,5 +1,5 @@
 ![inspector](https://s32.postimg.org/4ta3ofu91/inspector_logo04_bis.png)
-<p align="center">Privilege Escalation unix helper ( Forensics, Kernel exploit list, process )</p>
+<p align="center">Privilege Escalation unix helper ( Bash history Forensics, Kernel exploit list, process )</p>
 
 + Download  on server
 ```PHP
