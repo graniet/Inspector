@@ -81,10 +81,10 @@ class inspector(object):
 		uname = os.popen('uname -a').read()
 		process_list = os.popen('ps axco user,command | grep root').read()
 		print "========="
-		print "= [!] User  : "+os.popen('whoami').read().strip()
-		print "= [!] Group : "+os.popen('id -Gn').read().strip()[:20]  
-		print "= [!] Shell : "+self.environnement
-		print "= [!] "+uname.strip()
+		print "= [!] User  : " + os.popen('whoami').read().strip()
+		print "= [!] Group : " + os.popen('id -Gn').read().strip()[:20]  
+		print "= [!] Shell : " + self.environnement
+		print "= [!] " + uname.strip()
 		print "========"
 
 	def check_exploit(self):
@@ -132,6 +132,21 @@ class inspector(object):
 		except:
 			print bcolors.FAIL + "* Can't read history file."
 
+	def load_root_program(self):
+		print bcolors.OKGREEN + "* load program running with root" + bcolors.ENDC
+		program = os.popen('find / -perm /6000 -exec ls -ldb {} \; > /tmp/suid_root.txt').read();
+		if os.path.isfile('/tmp/suid_root.txt'):
+			print bcolors.OKGREEN + "* program loaded by root : /tmp/suid_root.txt " + bcolors.ENDC
+			user_input = raw_input("$ inspector (read file ?)[y/N] > ")
+			if user_input != "" or user_input == "y" or user_input == "Y":
+				file_open = open('/tmp/suid_root.txt').read()
+				explode = file_open.split('\n')
+				for line in explode:
+					if line.strip() != "":
+						print bcolors.OKBLUE + "* " + bcolors.ENDC + str(line)
+		else:
+			print bcolors.FAIL + "* Can't find program root file" + bcolors.ENDC
+
 	def load_inspection(self):
 		error = False
 		print "* Get user directory..."
@@ -164,6 +179,7 @@ class inspector(object):
 			time.sleep(1)
 			self.check_exploit()
 			self.history_file()
+			self.load_root_program()
 
 
 
