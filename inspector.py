@@ -155,7 +155,7 @@ class inspector(object):
 			self.start_dir = home
 			print bcolors.OKGREEN + "* success : " + bcolors.BOLD + str(home) + bcolors.ENDC
 		except:
-			print bcolors.OKRED + "* Fail : can't get users directory!" + bcolors.ENDC
+			print bcolors.FAIL + "* Fail : can't get users directory!" + bcolors.ENDC
 			error = True
 		print "* Get shell environnement..."
 		try:
@@ -172,7 +172,7 @@ class inspector(object):
 			self.kernel_version = kernel_version
 			print bcolors.OKGREEN + "* success : " + bcolors.BOLD + str(self.kernel_version) + bcolors.ENDC
 		except:
-			print bcolors.OKRED + "* Fail : can't get kernel!" + bcolors.ENDC
+			print bcolors.FAIL + "* Fail : can't get kernel!" + bcolors.ENDC
 		if error == False:
 			self.information()
 			print bcolors.WARNING + "* Checking exploit for : " + str(self.kernel_version) + "..." + bcolors.ENDC
