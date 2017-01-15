@@ -164,7 +164,7 @@ class inspector(object):
 			self.environnement = shell_environement
 			print bcolors.OKGREEN + "* success : "+bcolors.BOLD + str(self.environnement) + bcolors.ENDC
 		except:
-			print bcolors.OKRED + "* Fail : can't get shell environnement!" + bcolors.ENDC
+			print bcolors.FAIL + "* Fail : can't get shell environnement!" + bcolors.ENDC
 
 		print "* Get kernel version..."
 		try:
