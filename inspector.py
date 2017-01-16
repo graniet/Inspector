@@ -97,18 +97,40 @@ class inspector(object):
 		print "* Group : " + os.popen('id -Gn').read().strip()[:20]  
 		print "* Shell : " + self.environnement + bcolors.ENDC
 
+	# def check_exploit(self):
+	# 	for line in self.kernel_exploit:
+	# 		vulnerable = False
+	# 		print bcolors.OKBLUE + "* "+bcolors.ENDC + "Checking : " + line['name']
+	# 		for version in line['version']:
+	# 			if version == self.kernel_version:
+	# 				vulnerable = True
+	# 		if vulnerable == True:
+	# 			print bcolors.OKGREEN + "* Success" + bcolors.ENDC
+	# 		else:
+	# 			print bcolors.FAIL + "* Not vulnerable" + bcolors.ENDC
+	# 		time.sleep(0.3)
+
 	def check_exploit(self):
+		vulnerable_exploit = []
+		current = 0
+		len_exploit = len(self.kernel_exploit)
 		for line in self.kernel_exploit:
 			vulnerable = False
-			print bcolors.OKBLUE + "* "+bcolors.ENDC + "Checking : " + line['name']
+			current += 1
 			for version in line['version']:
 				if version == self.kernel_version:
 					vulnerable = True
 			if vulnerable == True:
-				print bcolors.OKGREEN + "* Success" + bcolors.ENDC
-			else:
-				print bcolors.FAIL + "* Not vulnerable" + bcolors.ENDC
+				vulnerable_exploit.append(str(line['name']))
+			sys.stdout.write('\r'+ bcolors.OKBLUE + "* checking exploit "+str(line['name'][:4])+"... ("+str(current)+"/"+str(len_exploit)+")" + bcolors.ENDC)
 			time.sleep(0.3)
+			sys.stdout.flush()
+		if len(vulnerable_exploit) > 0:
+			for line in vulnerable_exploit:
+				sys.stdout.write('\r'+ bcolors.OKGREEN + "* vulnerable to : " + str(line) + bcolors.ENDC)
+		else:
+			sys.stdout.write('\r'+ bcolors.FAIL + "* Can't find vulnerable exploit" + bcolors.ENDC)
+		print "..."
 
 	def history_file(self):
 		find = []
@@ -144,7 +166,7 @@ class inspector(object):
 
 	def load_root_program(self):
 		print bcolors.OKGREEN + "* load program running with root" + bcolors.ENDC
-		program = os.popen('find / -perm /6000 -exec ls -ldb {} \; > /tmp/suid_root.txt').read();
+		program = os.popen('find / -perm /6000 -exec ls -ldb {} \; > /tmp/suid_root.txt').read()
 		if os.path.isfile('/tmp/suid_root.txt'):
 			print bcolors.OKGREEN + "* program loaded by root : /tmp/suid_root.txt " + bcolors.ENDC
 			user_input = raw_input("$ inspector (read file ?)[y/N] > ")
