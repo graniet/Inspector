@@ -74,8 +74,8 @@ class inspector(object):
 			if distribution_name != "":
 				return distribution_name
 			else:
-				print bcolors.FAIl + "* can't get distribution name." + bcolors.ENDC
-				print bcolors.FAIl + "* inspector work only with linux." + bcolors.ENDC
+				print bcolors.FAIL + "* can't get distribution name." + bcolors.ENDC
+				print bcolors.FAIL + "* inspector work only with linux." + bcolors.ENDC
 				return False
 		except:
 			print bcolors.FAIL + "[FATAL] can't load distribution name." + bcolors.ENDC
