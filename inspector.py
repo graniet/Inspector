@@ -169,13 +169,16 @@ class inspector(object):
 		program = os.popen('find / -perm /6000 -exec ls -ldb {} \; > /tmp/suid_root.txt').read()
 		if os.path.isfile('/tmp/suid_root.txt'):
 			print bcolors.OKGREEN + "* program loaded by root : /tmp/suid_root.txt " + bcolors.ENDC
-			user_input = raw_input("$ inspector (read file ?)[y/N] > ")
-			if user_input == "y" or user_input == "Y":
-				file_open = open('/tmp/suid_root.txt').read()
-				explode = file_open.split('\n')
-				for line in explode:
-					if line.strip() != "":
-						print bcolors.OKBLUE + "* " + bcolors.ENDC + str(line)
+			try:
+				user_input = raw_input("$ inspector (read file ?)[y/N] > ")
+				if user_input == "y" or user_input == "Y":
+					file_open = open('/tmp/suid_root.txt').read()
+					explode = file_open.split('\n')
+					for line in explode:
+						if line.strip() != "":
+							print bcolors.OKBLUE + "* " + bcolors.ENDC + str(line)
+			except EOFError:
+				return False
 		else:
 			print bcolors.FAIL + "* Can't find program root file" + bcolors.ENDC
 
