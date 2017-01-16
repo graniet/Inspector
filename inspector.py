@@ -3,6 +3,7 @@
 
 import os,sys
 import time
+import platform
 
 class bcolors:
     HEADER = '\033[95m'
@@ -20,6 +21,7 @@ class inspector(object):
 		self.kernel_version = ""
 		self.start_dir = ""
 		self.environnement = ""
+		self.distribution = ""
 		self.kernel_version = ""
 		self.history_pattern = [
 			{"search":"ssh","content":"possible SSH login"},
@@ -66,6 +68,19 @@ class inspector(object):
 		self.logo()
 		self.load_inspection()
 
+	def get_distribution(self):
+		try:
+			distribution_name = platform.linux_distribution()[0]
+			if distribution_name != "":
+				return distribution_name
+			else:
+				print bcolors.FAIl + "* can't get distribution name." + bcolors.ENDC
+				print bcolors.FAIl + "* inspector work only with linux." + bcolors.ENDC
+				return False
+		except:
+			print bcolors.FAIL + "[FATAL] can't load distribution name." + bcolors.ENDC
+			sys.exit()
+
 	def logo(self):
 		os.system('clear')
 		print """  _____                           _             
@@ -77,15 +92,10 @@ class inspector(object):
 """
 
 	def information(self):
-		kernel_version = os.popen('uname -r').read()
 		uname = os.popen('uname -a').read()
-		process_list = os.popen('ps axco user,command | grep root').read()
-		print "========="
-		print "= [!] User  : " + os.popen('whoami').read().strip()
-		print "= [!] Group : " + os.popen('id -Gn').read().strip()[:20]  
-		print "= [!] Shell : " + self.environnement
-		print "= [!] " + uname.strip()
-		print "========"
+		print bcolors.OKBLUE + "* User  : " + os.popen('whoami').read().strip()
+		print "* Group : " + os.popen('id -Gn').read().strip()[:20]  
+		print "* Shell : " + self.environnement + bcolors.ENDC
 
 	def check_exploit(self):
 		for line in self.kernel_exploit:
@@ -138,7 +148,7 @@ class inspector(object):
 		if os.path.isfile('/tmp/suid_root.txt'):
 			print bcolors.OKGREEN + "* program loaded by root : /tmp/suid_root.txt " + bcolors.ENDC
 			user_input = raw_input("$ inspector (read file ?)[y/N] > ")
-			if user_input != "" or user_input == "y" or user_input == "Y":
+			if user_input == "y" or user_input == "Y":
 				file_open = open('/tmp/suid_root.txt').read()
 				explode = file_open.split('\n')
 				for line in explode:
@@ -148,6 +158,10 @@ class inspector(object):
 			print bcolors.FAIL + "* Can't find program root file" + bcolors.ENDC
 
 	def load_inspection(self):
+		distribution = self.get_distribution()
+		if distribution == False:
+			sys.exit()
+		self.distribution = distribution
 		error = False
 		print "* Get user directory..."
 		try:
@@ -169,6 +183,8 @@ class inspector(object):
 		print "* Get kernel version..."
 		try:
 			kernel_version = os.popen('uname -r').read().strip()
+			if "-" in kernel_version:
+				kernel_version = kernel_version.split('-')[0]
 			self.kernel_version = kernel_version
 			print bcolors.OKGREEN + "* success : " + bcolors.BOLD + str(self.kernel_version) + bcolors.ENDC
 		except:
