@@ -88,7 +88,7 @@ class inspector(object):
    / /\/ '_ \/ __| '_ \ / _ \/ __| __/ _ \| '__|
 /\/ /_ | | | \__ \ |_) |  __/ (__| || (_) | |   
 \____/ |_| |_|___/ .__/ \___|\___|\__\___/|_|   
-                 |_|                            
+                 |_|  Version: """+bcolors.FAIL+"1.0b"+bcolors.ENDC+"""                       
 """
 
 	def information(self):
@@ -96,19 +96,6 @@ class inspector(object):
 		print bcolors.OKBLUE + "* User  : " + os.popen('whoami').read().strip()
 		print "* Group : " + os.popen('id -Gn').read().strip()[:20]  
 		print "* Shell : " + self.environnement + bcolors.ENDC
-
-	# def check_exploit(self):
-	# 	for line in self.kernel_exploit:
-	# 		vulnerable = False
-	# 		print bcolors.OKBLUE + "* "+bcolors.ENDC + "Checking : " + line['name']
-	# 		for version in line['version']:
-	# 			if version == self.kernel_version:
-	# 				vulnerable = True
-	# 		if vulnerable == True:
-	# 			print bcolors.OKGREEN + "* Success" + bcolors.ENDC
-	# 		else:
-	# 			print bcolors.FAIL + "* Not vulnerable" + bcolors.ENDC
-	# 		time.sleep(0.3)
 
 	def check_exploit(self):
 		vulnerable_exploit = []
@@ -185,7 +172,9 @@ class inspector(object):
 	def load_inspection(self):
 		distribution = self.get_distribution()
 		if distribution == False:
-			sys.exit()
+			inputs = raw_input("Can't get distrib name continue? [Y/n]: ")
+			if inputs != "" and inputs != "Y" and inputs != "y":
+				sys.exit()
 		self.distribution = distribution
 		error = False
 		print "* Get user directory..."
