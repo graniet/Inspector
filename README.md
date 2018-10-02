@@ -1,5 +1,3 @@
-<img src="https://s32.postimg.org/4ta3ofu91/inspector_logo04_bis.png" width="250">
-
 Privilege Escalation unix helper
 
 ![version](https://img.shields.io/badge/version-1.0b-red.svg) [![twitter](https://img.shields.io/badge/twitter-@graniet75-blue.svg)](https://twitter.com/graniet75)
